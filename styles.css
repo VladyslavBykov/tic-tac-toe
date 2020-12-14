@@ -1,0 +1,28 @@
+body {
+    --cell-width: 100px;
+    --cell-height: 100px;
+}
+.ttc_container {
+    display: flex;
+    width: calc(var(--cell-width) * 3);
+    width: calc(var(--cell-height) * 3);
+    flex-wrap: wrap;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.ttc_cell {
+    width: var(--cell-width);
+    height: var(--cell-height);
+    border: 1px solid #000;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4em;
+}
+.ttc_cell:hover {
+    border-color: red;
+}
