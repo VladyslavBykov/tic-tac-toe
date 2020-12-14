@@ -26,3 +26,9 @@ body {
 .ttc_cell:hover {
     border-color: red;
 }
+.ttc_center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}

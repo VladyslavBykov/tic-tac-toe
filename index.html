@@ -6,21 +6,52 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="ticTacToe"></div>
-    <button id="start">Start</button>
+    <div class="ttc_center">
+        <div id="ticTacToe"></div>
+        <button type="button" data-bs-toggle="modal" id="play_btn" data-bs-target="#start_modal" class="btn btn-primary">Play</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="start_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Welcome to a Tic Tac Toe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please, setup users names:</p>
+                    <div class="row" id="init_form">
+                        <div class="col-md-12 mb-2">
+                            <label for="player_1">Player 1</label>
+                            <input class="form-control mb-2" type="text" id="player_1" aria-label="player 1" required>
+                            <div class="invalid-feedback">
+                                Please provide a name for player 1.
+                            </div>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="player_2">Player 2</label>
+                            <input class="form-control mb-2 invalid" type="text" id="player_2" aria-label="player 1" required>
+                            <div class="invalid-feedback">
+                                Please provide a name for player 2.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="start">Start</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script src="enums.js"></script>
+    <script src="tic-tac-toe.js"></script>
     <script src="index.js"></script>
-    <script>
-        const startBtn = document.getElementById("start");
-        if (!!startBtn) {
-            startBtn.addEventListener("click", () => {
-                startBtn.remove();
-                const game = new TicTacToe("ticTacToe");
-                game.start();
-            });
-        }
-    </script>
 </body>
 </html>
