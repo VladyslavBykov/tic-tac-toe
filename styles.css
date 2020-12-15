@@ -32,3 +32,10 @@ body {
     justify-content: center;
     height: 100vh;
 }
+
+.ttc_player-info {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+}

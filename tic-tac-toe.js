@@ -14,27 +14,37 @@ class TicTacToe {
     game = new Map();
     players = [];
     win = false;
+    elements = {};
     constructor(container, players) {
         if(!!container) {
             this.container = document.getElementById(container);
-            players.forEach(player => this.createNewPlayer(player));
+            players.forEach((player, index) => this.createNewPlayer(player, index));
             this.container.classList.add(GLOBAL_ENUMS.CLASS_NAMES.CONTAINER);
         }
     };
     start() {
         if(!!this.container) {
             this.buildBoard();
+            this.buildCurrentPlayerInfo();
             this.setPlayerQueue(this.players[0]);
         } else {
             this.showMessage(GLOBAL_ENUMS.MESSAGES_TYPES.ALERT, GLOBAL_ENUMS.MESSAGES.NOT_PROVIDED_CONTAINER);
         }
     }
-    createNewPlayer(name) {
-        this.players.push(name);
-        this.game.set(name, []);
+    createNewPlayer(name, index) {
+        const player = {
+            id: index,
+            name
+        }
+        this.players.push(player);
+        this.game.set(this.unifyName(player), []);
     }
-    setPlayerQueue(name) {
-        this.playerQueue = name;
+    setPlayerQueue(player) {
+        this.playerQueue = this.unifyName(player);
+        this.elements.playerNameElement.innerHTML = player.name;
+    }
+    unifyName(player) {
+        return `${player.name}_${player.id}`;
     }
     buildBoard() {
         for(let i = 0; i < 9; i++) {
@@ -44,6 +54,17 @@ class TicTacToe {
             cell.setAttribute(GLOBAL_ENUMS.DATA_ATTRIBUTES.DATA_INDEX, i);
             this.container.appendChild(cell);
         }
+    }
+    buildCurrentPlayerInfo() {
+        const playerInfoText = document.createElement(GLOBAL_ENUMS.ELEMENTS.DIV);
+        this.elements.playerNameElement = document.createElement(GLOBAL_ENUMS.ELEMENTS.SPAN);
+        const playerAfterNameText = document.createElement(GLOBAL_ENUMS.ELEMENTS.SPAN);
+        playerInfoText.classList.add(GLOBAL_ENUMS.CLASS_NAMES.PLAYER_INFO);
+        this.elements.playerNameElement.setAttribute(GLOBAL_ENUMS.DATA_ATTRIBUTES.DATA_PLAYER_NAME, "");
+        playerAfterNameText.innerHTML = GLOBAL_ENUMS.MESSAGES.PLAYER_INFO;
+        playerInfoText.appendChild(this.elements.playerNameElement);
+        playerInfoText.appendChild(playerAfterNameText);
+        this.container.parentNode.appendChild(playerInfoText);
     }
     cellClickHandler(event) {
         const el = event.target;
@@ -56,10 +77,10 @@ class TicTacToe {
     }
     setIcon(element) {
         if (element.innerHTML === "") {
-            if (this.playerQueue === this.players[0]) {
+            if (+this.playerQueue.split("_")[1] === this.players[0].id) {
                 element.innerHTML = GLOBAL_ENUMS.ICONS.CROSS;
             }
-            if (this.playerQueue === this.players[1]) {
+            if (+this.playerQueue.split("_")[1] === this.players[1].id) {
                 element.innerHTML = GLOBAL_ENUMS.ICONS.CIRCLE;
             }
         }
@@ -68,7 +89,7 @@ class TicTacToe {
         this.game.get(this.playerQueue).push(+element.getAttribute(GLOBAL_ENUMS.DATA_ATTRIBUTES.DATA_INDEX));
     }
     nextTurn() {
-        this.setPlayerQueue(this.players[this.players.findIndex((playerName) => this.playerQueue === playerName) === 0 ? 1 : 0]);
+        this.setPlayerQueue(this.players[this.players.findIndex((player) => +this.playerQueue.split("_")[1] === player.id) === 0 ? 1 : 0]);
     }
     checkWinner() {
         const list = this.game.get(this.playerQueue);
@@ -83,9 +104,12 @@ class TicTacToe {
                     win++;
                 }
                 if(win === 3) {
-                    // this.clearBoard();
                     this.win = true;
-                    setTimeout(() => this.showMessage(GLOBAL_ENUMS.MESSAGES_TYPES.ALERT, GLOBAL_ENUMS.MESSAGES.WIN + this.playerQueue), 0);
+                    const message = {
+                        title: GLOBAL_ENUMS.MESSAGES.CONGRATULATION_MESSAGE,
+                        text: GLOBAL_ENUMS.MESSAGES.WIN + this.playerQueue.split("_")[0],
+                    }
+                    this.showMessage(GLOBAL_ENUMS.MESSAGES_TYPES.CONFIRM, message);
                 }
             }
         }
@@ -101,8 +125,19 @@ class TicTacToe {
             case GLOBAL_ENUMS.MESSAGES_TYPES.CONSOLE_LOG:
                 console.log(message);
                 break;
+            case GLOBAL_ENUMS.MESSAGES_TYPES.CONFIRM:
+                this.buildConfirmMessage(message);
+                break;
             default:
                 break;
         }
+    }
+    buildConfirmMessage(message) {
+        document.getElementById(GLOBAL_ENUMS.ELEMENTS.CONFIRM_TITLE).innerHTML = message.title;
+        document.getElementById(GLOBAL_ENUMS.ELEMENTS.CONFIRM_TEXT).innerHTML = message.text;
+        document.getElementById(GLOBAL_ENUMS.ELEMENTS.CONFIRM_ACTION).click();
+        document.getElementById(GLOBAL_ENUMS.ELEMENTS.RESTART_BTN).addEventListener(GLOBAL_ENUMS.EVENTS.CLICK, () => {
+           location.reload();
+        });
     }
 };
